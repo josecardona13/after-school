@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>After School: a daily game for 2000s kids</title>
+<meta name="description" content="Name the 2000s cartoon or sitcom from six clues. A new show every day on NCK, CN, and DSN.">
+<meta property="og:title" content="After School">
+<meta property="og:description" content="Name the 2000s show from six clues. New shows every day.">
+<meta name="theme-color" content="#1b0f2e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📺%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@600;800;900&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1b0f2e; --bg2:#2a1748; --bg3:#3b2462; --slime:#9be22d;
+    --orange:#ff7a1a; --blue:#2f7bff; --pink:#ff4fa3; --ink:#120a1f;
+    --cream:#fff6e0; --screen:#0d2a1e; --screen-text:#b6ffcf; --red:#ff5b5b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Nunito',system-ui,sans-serif; color:var(--cream); min-height:100vh;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(155,226,45,.16) 0 120px, transparent 121px),
+      radial-gradient(circle at 90% 30%, rgba(255,122,26,.16) 0 160px, transparent 161px),
+      radial-gradient(circle at 20% 90%, rgba(47,123,255,.16) 0 140px, transparent 141px),
+      var(--bg);
+    padding:18px 14px 60px;
+  }
+  .wrap{max-width:560px;margin:0 auto}
+  header{text-align:center;margin-bottom:10px;position:relative}
+  .logo{font-family:'Bungee',cursive;font-size:clamp(34px,9vw,50px);line-height:.95;color:var(--slime);
+    text-shadow:4px 4px 0 var(--ink),7px 7px 0 var(--orange);transform:rotate(-3deg);display:inline-block}
+  .tag{margin-top:10px;font-weight:800;opacity:.8;font-size:14px}
+  .theme{display:inline-block;margin-top:10px;font-family:'Bungee';font-size:12px;background:var(--pink);color:var(--ink);
+    border:3px solid var(--ink);border-radius:999px;padding:4px 12px;box-shadow:3px 3px 0 var(--ink)}
+  .theme.boss{background:var(--red)}
+  .sound{position:absolute;top:0;right:0;background:var(--bg3);border:3px solid var(--ink);border-radius:12px;
+    font-size:18px;width:40px;height:40px;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0}
+  .btn{font-family:'Bungee',cursive;font-size:15px;border:3px solid var(--ink);border-radius:14px;padding:12px 14px;
+    cursor:pointer;color:var(--ink);background:var(--slime);box-shadow:4px 4px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+  .btn.alt{background:var(--orange)} .btn.ghost{background:var(--cream)} .btn.pink{background:var(--pink)}
+  .btn[disabled]{opacity:.45;cursor:not-allowed}
+  .tab{font-size:11px;padding:10px 4px}
+  .tab.off{background:var(--bg2);color:var(--cream)}
+  .card{background:var(--bg2);border:3px solid var(--ink);border-radius:20px;box-shadow:6px 6px 0 var(--ink);padding:18px}
+  .card + .card{margin-top:16px}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .lbl{font-family:'Bungee';font-size:13px;color:var(--orange)}
+  .pts{font-family:'Bungee';font-size:13px;color:var(--slime)}
+  .tries{display:flex;gap:6px}
+  .pip{width:16px;height:16px;border-radius:50%;border:2px solid var(--ink);background:#4a3570}
+  .pip.miss{background:var(--red)}.pip.hit{background:var(--slime)}.pip.skip{background:#777}.pip.peek{background:var(--blue)}
+
+  .tv{margin:14px 0;background:#3a3a3a;border:3px solid var(--ink);border-radius:26px;padding:14px;box-shadow:inset 0 -6px 0 #262626}
+  .screen{background:var(--screen);border-radius:18px;min-height:200px;padding:16px 16px 14px;font-family:'VT323',monospace;
+    color:var(--screen-text);font-size:23px;line-height:1.15;position:relative;overflow:hidden;border:3px solid var(--ink)}
+  .screen{padding-top:36px}
+  button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+  .screen::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.25) 0 2px,transparent 2px 4px)}
+  .ch{position:absolute;top:8px;right:12px;font-size:20px;opacity:.7}
+  .clue{margin:4px 0;animation:in .35s both}.clue .n{color:var(--slime)}
+  @keyframes in{from{opacity:0;transform:translateY(4px)}}
+  .static{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;
+    background-image:repeating-radial-gradient(circle at 17% 32%,#fff 0 1px,#000 1px 3px),repeating-radial-gradient(circle at 63% 71%,#aaa 0 1px,transparent 1px 2px);
+    background-size:7px 9px,5px 6px}
+  .static.on{animation:fuzz .6s steps(8) both}
+  @keyframes fuzz{0%{opacity:1;background-position:0 0,0 0}50%{opacity:.9;background-position:3px 5px,-4px 2px}100%{opacity:0;background-position:-5px 2px,2px -3px}}
+  .now{text-align:center;padding-top:28px;animation:in .5s both}
+  .now small{display:block;font-size:20px;color:var(--slime);letter-spacing:2px}
+  .now b{display:block;font-size:40px;line-height:1;margin-top:8px;color:#fff}
+  .bars{position:absolute;inset:0;display:flex}.bars i{flex:1}
+  .brb{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);background:var(--ink);color:#fff;text-align:center;padding:12px;z-index:2}
+  .brb b{display:block;font-size:30px}.brb span{font-size:20px;color:var(--orange)}
+  .knobs{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}.knob{width:14px;height:14px;border-radius:50%;background:#1f1f1f;border:2px solid var(--ink)}
+
+  .guess{position:relative}
+  input.txt{width:100%;font:800 16px 'Nunito';padding:12px 14px;border-radius:14px;border:3px solid var(--ink);background:var(--cream);color:var(--ink);outline:none}
+  .sugg{position:absolute;left:0;right:0;bottom:calc(100% + 6px);background:var(--cream);color:var(--ink);border:3px solid var(--ink);
+    border-radius:14px;z-index:5;display:none;max-height:220px;overflow-y:auto}
+  .sugg div{padding:10px 14px;font-weight:800;cursor:pointer;border-bottom:1px solid #e3d6b8}
+  .sugg div:hover,.sugg div.on{background:var(--slime)}
+  .actions{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-top:10px}
+  .actions .btn{font-size:13px;padding:12px 6px}
+  .history{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+  .h{font-weight:800;padding:8px 12px;border-radius:10px;border:2px solid var(--ink);background:var(--bg3);font-size:14px}
+  .h.x::before{content:"✖ ";color:var(--red)}.h.s::before{content:"⤼ ";color:#bbb}.h.p::before{content:"👀 "}
+  .note{font-size:12px;font-weight:800;opacity:.75;margin-top:8px}
+  .shake{animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+  .result{text-align:center}
+  .big{font-family:'Bungee';font-size:26px;color:var(--slime);text-shadow:3px 3px 0 var(--ink);margin:4px 0}
+  .big.lose{color:var(--orange)}
+  .grid{font-size:24px;letter-spacing:3px;margin:8px 0;white-space:pre-line}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);margin:14px 0}
+  .stat b{display:block;font-family:'Bungee';font-size:22px;color:var(--orange)}
+  .stat span{font-size:11px;font-weight:800;opacity:.8}
+  .muted{opacity:.75;font-size:13px;font-weight:700}
+  .linky{background:none;border:none;color:var(--slime);font:800 13px 'Nunito';text-decoration:underline;cursor:pointer;margin-top:10px}
+  textarea.share{width:100%;margin-top:8px;font:700 13px monospace;border-radius:10px;border:2px solid var(--ink);padding:8px;display:none}
+
+  .hist{display:flex;flex-direction:column;gap:5px;margin-top:10px;text-align:left}
+  .hb{display:grid;grid-template-columns:22px 1fr 40px;gap:8px;align-items:center;font-weight:900;font-size:13px}
+  .hb .bar{height:20px;background:var(--bg3);border:2px solid var(--ink);border-radius:6px;overflow:hidden}
+  .hb .bar i{display:block;height:100%;background:#7a63a8;transition:width .6s}
+  .hb.me .bar i{background:var(--slime)}
+  .crowdmsg{font-weight:900;font-size:16px;margin-top:4px}
+  .poll{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .poll .btn{font-size:12px;padding:14px 6px;position:relative;overflow:hidden;min-height:64px}
+  .poll .btn .fill{position:absolute;left:0;top:0;bottom:0;background:rgba(0,0,0,.18);transition:width .6s}
+  .poll .btn span{position:relative}
+  .poll .btn.mine{outline:3px solid var(--cream);outline-offset:2px}
+
+  .timerbar{height:14px;border:3px solid var(--ink);border-radius:10px;background:var(--bg3);overflow:hidden;margin:12px 0}
+  .timerbar i{display:block;height:100%;background:var(--slime);width:100%;transition:width .25s linear}
+  .showcard{background:var(--cream);color:var(--ink);border:3px solid var(--ink);border-radius:18px;padding:26px 14px;text-align:center;
+    font-weight:900;font-size:24px;margin:10px 0 14px;min-height:96px;display:flex;align-items:center;justify-content:center;box-shadow:4px 4px 0 var(--ink)}
+  .showcard.good{background:var(--slime)}.showcard.bad{background:var(--red)}
+  .chans{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .chans .btn{font-size:18px;padding:16px 6px}
+  .c-nick{background:var(--orange)}.c-cn{background:#fff;background-image:repeating-linear-gradient(45deg,#fff 0 8px,#e7e7e7 8px 16px)}.c-dis{background:var(--blue);color:#fff}
+  .intro p{margin:8px 0;font-weight:700;line-height:1.4}
+
+  .lb{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+  .lr{display:grid;grid-template-columns:28px 1fr 60px 60px;gap:6px;align-items:center;font-weight:800;font-size:14px;
+    background:var(--bg3);border:2px solid var(--ink);border-radius:10px;padding:8px 10px}
+  .lr.head{background:none;border:none;font-size:11px;opacity:.7;padding:0 10px}
+  .lr.me{background:#4d6b1a}
+  .lr b{font-family:'Bungee';font-size:13px;color:var(--orange)}
+  .code{font-family:'Bungee';font-size:28px;letter-spacing:4px;color:var(--slime);text-shadow:2px 2px 0 var(--ink)}
+  .inrow{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px}
+
+  .room{position:relative;height:300px;border:3px solid var(--ink);border-radius:18px;overflow:hidden;margin-top:12px;
+    background:linear-gradient(#6b3fa0 0 64%, #2e1a10 64% 66%, #8a5a34 66%)}
+  .room::before{content:"";position:absolute;left:0;right:0;top:0;height:64%;
+    background:repeating-linear-gradient(90deg,transparent 0 38px,rgba(255,255,255,.06) 38px 40px)}
+  .window{position:absolute;left:8%;top:10%;width:70px;height:62px;background:linear-gradient(#ffb36b,#ff7ab6);border:5px solid #f5e6c8;border-radius:6px}
+  .item{position:absolute;font-size:40px;line-height:1;text-align:center;transition:transform .2s;cursor:default}
+  .item.locked{filter:grayscale(1) brightness(.25);opacity:.6}
+  .item small{display:block;font:900 10px 'Nunito';color:var(--cream);margin-top:2px;filter:none}
+  .item:not(.locked):hover{transform:scale(1.15) rotate(-4deg)}
+  .item.new{animation:pop .7s both}
+  @keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.3)}100%{transform:scale(1)}}
+  .unlocks{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
+  .un{font-weight:800;font-size:13px;background:var(--bg3);border:2px solid var(--ink);border-radius:10px;padding:8px}
+  .un.lk{opacity:.5}
+
+  .remote{margin:0 0 16px;background:linear-gradient(180deg,#4a4a52,#2c2c33 60%,#232329);border:3px solid var(--ink);border-radius:26px;
+    padding:12px 12px 14px;box-shadow:5px 5px 0 var(--ink),inset 0 2px 0 rgba(255,255,255,.15);position:relative}
+  .rtop{display:flex;justify-content:space-between;align-items:center;margin:0 6px 10px}
+  .brand{font:900 10px 'Nunito';letter-spacing:3px;color:#9a9aa6}
+  .led{width:10px;height:10px;border-radius:50%;background:#5a1515;border:2px solid var(--ink)}
+  .led.on{background:#ff3030;box-shadow:0 0 10px #ff3030}
+  .rbody{display:grid;grid-template-columns:54px 1fr 54px;gap:10px;align-items:stretch}
+  .chbtn{border:3px solid var(--ink);border-radius:16px;background:linear-gradient(#77777f,#55555d);color:#fff;cursor:pointer;
+    font:900 11px 'Nunito';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:0 4px 0 var(--ink)}
+  .chbtn b{font-size:20px;line-height:1}
+  .chbtn:active,.rkey:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+  .keys{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .keys.four{grid-template-columns:repeat(4,1fr)}
+  .rkey{border:3px solid var(--ink);border-radius:14px;cursor:pointer;padding:8px 2px 7px;color:var(--ink);box-shadow:0 4px 0 var(--ink);
+    text-align:center;position:relative;transition:transform .06s}
+  .rkey .num{font-family:'Bungee';font-size:20px;line-height:1}
+  .rkey .nm{font:900 10px 'Nunito';margin-top:3px}
+  .rkey .dot{position:absolute;top:5px;right:6px;width:8px;height:8px;border-radius:50%;border:2px solid var(--ink);background:transparent}
+  .rkey .dot.won{background:var(--slime)}.rkey .dot.lost{background:var(--red)}.rkey .dot.go{background:#ffd23f}
+  .rkey.sel{outline:3px solid var(--cream);outline-offset:2px}
+  .rkey.c-dis{color:#fff}
+  .pwr{width:34px;height:34px;border-radius:50%;border:3px solid var(--ink);background:radial-gradient(circle at 35% 30%,#ff7a7a,#c41f1f 60%);
+    color:#fff;font:900 15px 'Nunito';cursor:pointer;box-shadow:0 3px 0 var(--ink);line-height:1}
+  .pwr:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+  .pwr.pulse{animation:pulse 1.2s infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 3px 0 var(--ink),0 0 0 0 rgba(255,80,80,.7)}50%{box-shadow:0 3px 0 var(--ink),0 0 0 10px rgba(255,80,80,0)}}
+  .scrwrap{position:relative}
+  .crt{position:absolute;inset:0;border-radius:18px;background:#050505;z-index:6;overflow:hidden;display:none;border:3px solid var(--ink)}
+  .crt.show{display:block}
+  .crt::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(255,255,255,.10),transparent 55%)}
+  .crt::after{content:"";position:absolute;inset:0;margin:auto;background:#fff;opacity:0;border-radius:2px}
+  .crt.off-anim::after{animation:crtOff .6s ease-in forwards}
+  .crt.on-anim::after{animation:crtOn .5s ease-out forwards}
+  @keyframes crtOff{0%{opacity:1;transform:scale(1,1)}35%{opacity:1;transform:scale(1,.012)}70%{opacity:1;transform:scale(.025,.012)}100%{opacity:0;transform:scale(0,0)}}
+  @keyframes crtOn{0%{opacity:1;transform:scale(0,0)}30%{opacity:1;transform:scale(.025,.012)}60%{opacity:1;transform:scale(1,.012)}100%{opacity:0;transform:scale(1,1)}}
+  .crt .msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+    font-family:'VT323',monospace;color:#5b5b5b;font-size:22px;text-align:center;opacity:0;padding:10px}
+  .crt.show:not(.on-anim) .msg{animation:fadeMsg .6s .65s both}
+  @keyframes fadeMsg{from{opacity:0}to{opacity:1}}
+  .crt .msg b{font-size:30px;color:#7a7a7a;font-weight:400}
+  .osd{position:absolute;top:10px;left:14px;z-index:4;font-size:26px;color:#7dff6a;text-shadow:2px 2px 0 #000;animation:osd 1.6s forwards;pointer-events:none}
+  @keyframes osd{0%,75%{opacity:1}100%{opacity:0}}
+  .c-boss{background:var(--red)}
+  .tv{transition:background .2s}
+  .tv.ch-n{background:var(--orange)} .tv.ch-d{background:var(--blue)} .tv.ch-b{background:var(--red)}
+  .tv.ch-c{background:#fff;background-image:repeating-conic-gradient(#111 0 25%,#fff 0 50%);background-size:28px 28px}
+  .nextch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+  .nextch .btn{font-size:12px;padding:12px 6px}
+  .slime{position:fixed;left:0;right:0;top:0;height:78vh;z-index:55;pointer-events:none;animation:pour .45s cubic-bezier(.3,1.4,.5,1) both}
+  .slime.bye{animation:slideOff .9s ease-in forwards}
+  .slime svg{width:100%;height:100%;display:block;overflow:visible;filter:drop-shadow(0 6px 0 rgba(18,10,31,.55))}
+  .slime .drip{transform-box:fill-box;transform-origin:top;animation:drip 1.4s cubic-bezier(.2,.7,.3,1) both}
+  @keyframes pour{from{transform:translateY(-105%)}to{transform:translateY(0)}}
+  @keyframes drip{from{transform:scaleY(.05)}to{transform:scaleY(1)}}
+  @keyframes slideOff{0%{transform:translateY(0);opacity:1}100%{transform:translateY(110vh);opacity:.2}}
+  .checker{position:fixed;inset:0;z-index:55;pointer-events:none;display:grid;perspective:600px}
+  .checker i{display:block;background:#fff;border:1px solid #111;transform:rotateY(90deg);animation:tileIn .28s ease-out forwards, tileOut .28s ease-in forwards}
+  .checker i.b{background:#111}
+  @keyframes tileIn{to{transform:rotateY(0)}}
+  @keyframes tileOut{from{transform:rotateY(0)}to{transform:rotateY(-90deg)}}
+  .watching{position:fixed;inset:0;z-index:56;display:flex;align-items:center;justify-content:center;pointer-events:none;perspective:900px}
+  .watching .wc{background:radial-gradient(circle at 30% 20%,#7ec8ff,#2f7bff 45%,#13307a);border:4px solid var(--ink);border-radius:26px;
+    padding:22px 34px;text-align:center;color:#fff;box-shadow:8px 8px 0 var(--ink),0 0 40px rgba(126,200,255,.7);
+    animation:wcIn .6s cubic-bezier(.2,1.3,.4,1) both, wcOut .4s ease-in 1.5s forwards;position:relative;overflow:hidden}
+  .watching .wc::after{content:"";position:absolute;top:-50%;left:-60%;width:40%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);
+    transform:rotate(20deg);animation:shine 1s .5s ease-in-out}
+  .watching small{display:block;font:900 16px 'Nunito';letter-spacing:2px;opacity:.9}
+  .watching b{display:block;font-family:'Bungee';font-size:34px;line-height:1.05;margin-top:4px;text-shadow:3px 3px 0 var(--ink)}
+  @keyframes wcIn{from{transform:rotateY(-540deg) scale(.2);opacity:0}to{transform:rotateY(0) scale(1);opacity:1}}
+  @keyframes wcOut{to{transform:scale(1.4);opacity:0}}
+  @keyframes shine{to{left:130%}}
+  #fx{position:fixed;inset:0;pointer-events:none;z-index:50}
+  .foot{text-align:center;margin-top:22px;font-size:12px;opacity:.55;font-weight:700}
+  .hide{display:none!important}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<div class="wrap">
+  <header>
+    <button class="sound" id="soundBtn" title="Sound">🔊</button>
+    <div class="logo">AFTER<br>SCHOOL</div>
+    <div class="tag">A daily game for kids who grew up on 2000s TV</div>
+    <div class="theme" id="themeTag">PICK YOUR CHANNEL</div>
+  </header>
+
+  <div class="tabs">
+    <button class="btn tab" data-tab="show">Today</button>
+    <button class="btn tab off" data-tab="chan">Bonus</button>
+    <button class="btn tab off" data-tab="crew">Crew</button>
+    <button class="btn tab off" data-tab="room">Room</button>
+  </div>
+
+  <!-- TODAY -->
+  <section id="v-show">
+    <div class="card">
+      <div class="row">
+        <span class="lbl" id="dayLbl">DAY 1</span>
+        <span class="pts" id="ptsLbl">600 PTS</span>
+        <div class="tries" id="pips"></div>
+      </div>
+      <div class="tv">
+        <div class="scrwrap">
+          <div class="screen" id="screen"></div>
+          <div class="crt" id="crt"><div class="msg"><b id="crtTitle">OFF AIR</b><span id="crtSub">Press power to turn it back on</span></div></div>
+        </div>
+        <div class="knobs"><span class="knob"></span><span class="knob"></span></div>
+      </div>
+      <div class="remote" id="remote">
+        <div class="rtop"><button class="pwr" id="pwrBtn" title="Power">⏻</button><span class="brand">AFTER SCHOOL · REMOTE</span><span class="led" id="led"></span></div>
+        <div class="rbody">
+          <button class="chbtn" id="chDown" title="Channel down (↓)"><b>▼</b>CH</button>
+          <div class="keys" id="picker"></div>
+          <button class="chbtn" id="chUp" title="Channel up (↑)"><b>▲</b>CH</button>
+        </div>
+      </div>
+
+      <div id="playArea">
+        <div class="guess">
+          <div class="sugg" id="sugg"></div>
+          <input class="txt" id="guessIn" placeholder="Type a show..." autocomplete="off">
+        </div>
+        <div class="actions">
+          <button class="btn" id="submitBtn">Guess</button>
+          <button class="btn ghost" id="skipBtn">Skip</button>
+          <button class="btn pink" id="peekBtn" title="See the next clue without using a guess. Costs 150 points. Once a day.">Peek</button>
+        </div>
+        <div class="note" id="playNote">Fewer clues means more points. Peek shows the next clue for free once a day, but costs 150 points.</div>
+        <div class="history" id="history"></div>
+      </div>
+
+      <div id="resultArea" class="result hide">
+        <div class="big" id="resTitle">YOU GOT IT</div>
+        <div class="grid" id="resGrid"></div>
+        <div class="stats">
+          <div class="stat"><b id="stPts">0</b><span>Points</span></div>
+          <div class="stat"><b id="stWin">0%</b><span>Win rate</span></div>
+          <div class="stat"><b id="stStreak">0</b><span>Streak</span></div>
+          <div class="stat"><b id="stBest">0</b><span>Best</span></div>
+        </div>
+        <div id="nextLbl" class="lbl" style="margin-top:4px"></div>
+        <div class="nextch" id="nextCh"></div>
+        <button class="btn alt" id="shareBtn" style="margin-top:14px">Copy result</button>
+        <textarea class="share" id="shareBox" rows="6" readonly></textarea>
+        <p class="muted" style="margin-top:12px">Next show in <span id="countdown">--:--:--</span></p>
+        <button class="linky" id="practiceBtn">Play a practice round</button>
+      </div>
+    </div>
+
+    <div class="card hide" id="crowdCard">
+      <div class="lbl">HOW EVERYONE DID</div>
+      <div class="crowdmsg" id="crowdMsg"></div>
+      <div class="hist" id="hist"></div>
+    </div>
+
+    <div class="card hide" id="pollCard">
+      <div class="lbl">HOT TAKE</div>
+      <div class="crowdmsg" id="pollQ"></div>
+      <div class="poll" id="pollBtns"></div>
+      <div class="note" id="pollNote"></div>
+    </div>
+  </section>
+
+  <!-- BONUS -->
+  <section id="v-chan" class="hide">
+    <div class="card">
+      <div id="chanIntro" class="intro">
+        <div class="lbl">WHICH CHANNEL?</div>
+        <p>15 shows. 45 seconds. Sort each one into NCK, CN, or DSN. 10 points per correct answer.</p>
+        <p class="muted">Same shows for everyone today. Keys 1, 2, 3 work too.</p>
+        <button class="btn" id="chanStart" style="width:100%;margin-top:8px">Start</button>
+      </div>
+      <div id="chanPlay" class="hide">
+        <div class="row"><span class="lbl" id="chanCount">1 / 15</span><span class="lbl" id="chanTime">45s</span></div>
+        <div class="timerbar"><i id="chanBar"></i></div>
+        <div class="showcard" id="chanShow"></div>
+        <div class="chans">
+          <button class="btn c-nick" data-c="N">NCK</button>
+          <button class="btn c-cn" data-c="C">CN</button>
+          <button class="btn c-dis" data-c="D">DSN</button>
+        </div>
+      </div>
+      <div id="chanDone" class="result hide">
+        <div class="big" id="chanScore">12 / 15</div>
+        <div class="grid" id="chanGrid"></div>
+        <p class="muted" id="chanMsg"></p>
+        <p class="crowdmsg" id="chanCrowd" style="margin-top:8px"></p>
+        <button class="btn alt" id="chanShare" style="margin-top:12px">Copy result</button>
+        <textarea class="share" id="chanShareBox" rows="5" readonly></textarea>
+        <div id="chanMissed" style="margin-top:14px;text-align:left"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREW -->
+  <section id="v-crew" class="hide">
+    <div class="card">
+      <div class="lbl">YOUR CREW</div>
+      <div id="crewOff" class="intro">
+        <p>Crews are coming soon. For now, hit Copy result after you play and drop it in the group chat.</p>
+      </div>
+      <div id="crewJoin" class="intro hide">
+        <p>Start a crew and send the code to your cousins, your old lunch table, whoever. Everyone with the code shows up on one leaderboard.</p>
+        <div class="inrow">
+          <input class="txt" id="codeIn" placeholder="Enter a crew code" maxlength="8" autocomplete="off" style="text-transform:uppercase">
+          <button class="btn" id="joinBtn">Join</button>
+        </div>
+        <button class="btn alt" id="newCrewBtn" style="width:100%;margin-top:10px">Start a new crew</button>
+      </div>
+      <div id="crewOn" class="hide">
+        <div class="row" style="margin-top:6px">
+          <div><div class="muted">Crew code</div><div class="code" id="crewCode">-----</div></div>
+          <button class="btn ghost" id="copyCode" style="font-size:12px">Copy code</button>
+        </div>
+        <div class="lb" id="lb"></div>
+        <button class="linky" id="leaveBtn">Leave crew</button>
+      </div>
+      <div class="note" id="crewNote"></div>
+    </div>
+  </section>
+
+  <!-- ROOM -->
+  <section id="v-room" class="hide">
+    <div class="card">
+      <div class="row"><span class="lbl">YOUR ROOM</span><span class="pts" id="roomStreak">BEST STREAK 0</span></div>
+      <p class="muted" style="margin-top:6px">Keep your streak going to fill your room. Items stay once you unlock them.</p>
+      <div class="room" id="room"><div class="window"></div></div>
+      <div class="unlocks" id="unlocks"></div>
+    </div>
+  </section>
+
+  <div class="foot">Prototype. Not affiliated with any network.</div>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const NICK=[
+ {a:"The Fairly OddParents",c:["The scariest person in this town is a teenage babysitter.","A teacher here is convinced magic is real, and nobody believes him.","The rich, popular girl at school is Trixie Tang.","A giant, muscle-bound fairy enforces the rules.","The secret helpers can disguise themselves as goldfish.","Cosmo and Wanda grant Timmy Turner's wishes."]},
+ {a:"Avatar: The Last Airbender",c:["One poor merchant just wants to sell his cabbages.","A banished prince wants his honor back.","His uncle would rather talk about tea.","A blind girl turns out to be the toughest fighter in the group.","A comet is coming, and the clock is ticking.","Aang has to master all four elements."]},
+ {a:"Danny Phantom",c:["One villain only wants to talk about boxes.","The goth best friend is an ultra-recycle-vegetarian.","His older sister Jazz is way too into psychology.","The main villain is a billionaire with a crush on the hero's mom.","Ghosts get sucked into a thermos.","Danny Fenton is half ghost."]},
+ {a:"iCarly",c:["Dinner here is spaghetti tacos.","The doorman has a giant wart.","One friend is famous for taking his shirt off.","A kid named Nevel is their nemesis.","Most of it happens in a Seattle apartment loft.","Carly, Sam, and Freddie run a web show."]},
+ {a:"The Adventures of Jimmy Neutron: Boy Genius",c:["His dad is obsessed with ducks and pie.","One best friend loves llamas. The other worships an action figure.","His rival at school is Cindy Vortex.","The town is called Retroville.","His robot dog is named Goddard.","Boy genius Jimmy, with the swirly hair."]},
+ {a:"Drake & Josh",c:["The little sister always wins.","One brother works at a movie theater with a terrifying manager.","Their dad does the weather on local TV.","One brother dreams of meeting Oprah.","Two stepbrothers share a room. One's cool, one's a nerd.","Drake plays guitar. Josh does magic."]},
+ {a:"SpongeBob SquarePants",c:["The grumpy neighbor plays the clarinet.","His pet snail meows.","A karate-loving squirrel from Texas lives in an air dome.","The rival restaurant is the Chum Bucket.","He has failed his boating test more times than anyone can count.","He lives in a pineapple under the sea."]}
+ ,{a:"Rugrats",c:["Their favorite dinosaur is Reptar.","The twins will happily eat worms.","One kid wears glasses and is scared of basically everything.","The bossy cousin carries a doll named Cynthia.","The leader keeps a screwdriver in his diaper.","Tommy Pickles and the babies."]}
+ ,{a:"Hey Arnold!",c:["A girl keeps a secret shrine to the boy she bullies.","His grandparents run a boarding house.","His best friend Gerald has very tall hair.","Set in the city of Hillwood.","Helga calls him Football Head.","Arnold, the kid with the football-shaped head."]}
+ ,{a:"Zoey 101",c:["The rich kid's dad buys him everything he wants.","One girl is a mad scientist named Quinn.","Her little brother Dustin goes to the same school.","Her friend Chase is obviously in love with her.","Girls were just let into Pacific Coast Academy.","Jamie Lynn Spears plays Zoey Brooks."]}
+ ,{a:"Ned's Declassified School Survival Guide",c:["A janitor spends his days chasing a weasel.","His best friends are Moze and Cookie.","Cookie is the tech genius of the group.","Set at James K. Polk Middle School.","Every episode gives tips for surviving middle school.","Ned Bigby shares his survival guide."]}
+ ,{a:"Rocket Power",c:["Their dad runs a beach spot called the Shore Shack.","Their friend Twister is always filming.","The new kid Sam got the nickname Squid.","Set in Ocean Shores, California.","Skateboarding, surfing, hockey, everything extreme.","Otto and Reggie Rocket."]}
+ ,{a:"CatDog",c:["Their bullies are the Greaser Dogs.","One half loves garbage. The other loves reading.","Set in a town called Nearburg.","Nobody knows how they were born.","One body, two heads, no tail.","Half cat, half dog."]}
+ ,{a:"The Wild Thornberrys",c:["The family travels the world in a giant RV called the Comvee.","Her teenage sister Debbie is always annoyed.","A wild boy named Donnie lives with them.","Her best friend is a chimp named Darwin.","A shaman gave her a secret power.","Eliza Thornberry can talk to animals."]}
+ ,{a:"The Amanda Show",c:["Her number one fan, Penelope Taylor, is a little too obsessed.","One sketch has a kid judge running the courtroom.","Another sketch is a soap opera called Moody's Point.","Drake and Josh were in the cast before their own show.","There were dancing lobsters.","Amanda Bynes's sketch show."]}
+ ,{a:"Kenan & Kel",c:["One of them really, really loves orange soda.","One works at a grocery store called Rigby's.","Set in Chicago.","Every scheme goes wrong by the end.","Both stars came from All That.","Kenan and Kel."]}
+ ,{a:"As Told by Ginger",c:["Her little brother Carl is always plotting with his friend Hoodsey.","Her best friends are Dodie and Macie.","The popular girl is Courtney Gripling.","From the same studio that made Rugrats.","The characters actually change clothes and grow up.","Ginger Foutley writes everything in her journal."]}
+];
+const DISNEY=[
+ {a:"Kim Possible",c:["The main hangout is a fast food spot called Bueno Nacho.","Her best friend keeps a naked mole-rat in his pocket.","A 10-year-old genius runs tech support from his bedroom.","The villain's sidekick is way more dangerous than the villain.","She's a cheerleader who also saves the world.","Kim and Ron versus Dr. Drakken and Shego."]},
+ {a:"That's So Raven",c:["Her dad is a chef, and her little brother always has a money scheme going.","Set in San Francisco.","She designs her own clothes.","Her best friends are Eddie and Chelsea.","Her little brother later got his own spinoff in the White House.","Raven Baxter can see the future."]},
+ {a:"The Suite Life of Zack & Cody",c:["The girl at the candy counter is smarter than everyone around her.","The heiress who owns the place is famously clueless.","The manager spends most episodes yelling two names.","Their mom sings in the lounge downstairs.","Later, the whole thing moved to a cruise ship.","Zack and Cody cause chaos at the Tipton."]},
+ {a:"Phineas and Ferb",c:["One brother almost never talks.","A girl next door keeps asking what they're doing.","The villain's company is Doofenshmirtz Evil Incorporated.","Their sister tries to bust them every day and never does.","The family pet is a platypus secret agent.","Phineas and Ferb build something huge every day of summer."]},
+ {a:"Lizzie McGuire",c:["A cartoon version of the main girl says what she's really thinking.","Her best friends are Gordo and Miranda.","Kate Sanders is the popular rival.","Her little brother Matt is always scheming.","The movie sent her to Rome.","Hilary Duff plays Lizzie."]},
+ {a:"Hannah Montana",c:["Her TV dad is played by her real dad.","Her older brother Jackson works at a beach snack shack.","Her best friend Lilly has a disguise too.","Set in Malibu.","A blonde wig is the whole secret.","Miley Stewart is secretly a pop star."]}
+ ,{a:"Even Stevens",c:["The class clown's best friends are Twitty and Tawny.","The weird neighbor kid Beans is always in their kitchen.","Their older brother Donnie is a sports star.","His sister is the perfect student.","Shia LaBeouf plays the youngest.","Louis and Ren Stevens."]}
+ ,{a:"The Proud Family",c:["Her dad sells his own brand of snacks.","Her grandma has a dog named Puff.","The Gross Sisters are the bullies.","Her baby siblings are twins, BeBe and CeCe.","Her dad is very, very protective.","Penny Proud."]}
+ ,{a:"American Dragon: Jake Long",c:["His mentor's sidekick is a talking dog named Fu Dog.","Set in New York City.","The villain leads a group of dragon hunters.","His best friends are Trixie and Spud.","His crush Rose is secretly one of the hunters.","Jake Long is a dragon."]}
+ ,{a:"Wizards of Waverly Place",c:["The family runs a sub shop.","Their dad gave up his powers to marry their mom.","Their best friend Harper has the wildest outfits.","Only one sibling gets to keep their powers.","Set in New York City.","Alex, Justin, and Max Russo."]}
+ ,{a:"Phil of the Future",c:["Their time machine broke down on a family vacation.","His little sister Pim is a tiny tyrant.","His best friend Keely knows the secret.","His do-everything gadget is called a Wizrd.","The family is from the year 2121.","Phil Diffy, stuck in the past."]}
+ ,{a:"Cory in the House",c:["The president's daughter Sophie is a little schemer.","His dad is the White House chef.","He moved from San Francisco to Washington.","His friends are Newt and Meena.","It's a spinoff of That's So Raven.","Cory Baxter lives at the White House."]}
+ ,{a:"Lilo & Stitch: The Series",c:["Every episode, another alien experiment needs a name and a home.","Her snobby rival is Mertle Edmonds.","A huge shark-like alien named Gantu hunts them.","Jumba and Pleakley live with them.","Set in Hawaii.","Lilo and Experiment 626."]}
+ ,{a:"The Emperor's New School",c:["He has to graduate to become emperor.","His principal is secretly the villain.","Kronk is just happy to be there.","His crush is Malina.","In the movie, he got turned into a llama.","Kuzco goes to school."]}
+ ,{a:"Sonny with a Chance",c:["The rival show is a drama called Mackenzie Falls.","Her sketch show is So Random!","She moved from Wisconsin to Hollywood.","Her frenemy is Chad Dylan Cooper.","Demi Lovato stars.","Sonny Munroe."]}
+ ,{a:"Good Luck Charlie",c:["Every episode ends with a video diary.","Set in Denver.","The family name is Duncan.","The big sister records advice for the baby.","Five kids by the end of it.","The baby's name is Charlie."]}
+];
+const CN=[
+ {a:"Courage the Cowardly Dog",c:["The sarcastic computer gives better advice than anyone.","Set in the middle of Nowhere. Literally.","The old farmer's favorite insult is calling his pet stupid.","A villain named Katz runs every shady business around.","Muriel is sweet. Eustace is not.","A pink dog protects his owners from everything."]},
+ {a:"Ed, Edd n Eddy",c:["You never see a single adult.","The neighborhood jock calls them dorks.","One kid's best friend is a piece of wood.","Three scary sisters live in a trailer park.","Every scam is about buying jawbreakers.","Ed, Double D, and Eddy."]},
+ {a:"Foster's Home for Imaginary Friends",c:["One resident only says one word, and it's her name.","A very proper rabbit runs the house.","The tallest resident is also the nicest.","Kids drop off friends they've outgrown.","Mac visits every day to see Bloo.","A home for imaginary friends."]},
+ {a:"Codename: Kids Next Door",c:["Every episode is an Operation with an acronym title.","One agent is obsessed with Rainbow Monkeys.","The villains are five creepy kids who talk at the same time.","Headquarters is a giant treehouse.","Agents go by Numbuh 1 through 5.","Kids at war with adults, one treehouse at a time."]},
+ {a:"Dexter's Laboratory",c:["Nobody ever explains why he has an accent.","His rival lives nearby and has an evil lab of his own.","His lab monkey is secretly a superhero.","His sister loves ballet and pressing buttons.","The lab is hidden behind a bookshelf.","Dexter is a boy genius. Dee Dee keeps getting in."]},
+ {a:"The Powerpuff Girls",c:["The mayor can barely do anything without his assistant.","One villain is a monkey with a giant brain.","The creepiest villain is just called Him.","A professor accidentally added Chemical X.","They save the world before bedtime.","Blossom, Bubbles, and Buttercup."]}
+ ,{a:"Samurai Jack",c:["Some episodes go minutes without anyone talking.","A shape-shifting demon flung him into the future.","A loud Scotsman becomes his friend.","The villain's name is Aku.","He's trying to get back to the past.","A samurai named Jack."]}
+ ,{a:"Ben 10",c:["His grandpa drives an RV called the Rust Bucket.","His cousin Gwen does magic.","An alien warlord named Vilgax wants what he found.","He started with 10 alien forms.","A watch called the Omnitrix.","Ben Tennyson goes hero."]}
+ ,{a:"Teen Titans",c:["One member only eats tofu. Another only wants meat.","They live in a giant T-shaped tower.","One member is an alien princess.","Their villain is Slade.","Raven, Starfire, Cyborg, and Beast Boy.","Robin leads the team."]}
+ ,{a:"Johnny Bravo",c:["A little girl named Suzy keeps showing up.","He lives with his mom, Bunny.","His hair is a giant pompadour.","He flexes at every woman he meets, and it never works.","Sunglasses on, always.","Johnny Bravo."]}
+ ,{a:"The Grim Adventures of Billy & Mandy",c:["A kid named Irwin is in love with Mandy.","Billy's dad is just as clueless as Billy.","Their best friend lost a game of limbo and now works for them.","Mandy almost never smiles.","Their best friend is the Grim Reaper.","Billy, Mandy, and Grim."]}
+ ,{a:"Camp Lazlo",c:["Every cabin is named after a kind of bean.","The scoutmaster is a grumpy moose named Lumpus.","His friends are Raj the elephant and Clam the rhino.","The girls' camp is across the lake.","Set at Camp Kidney.","Lazlo, a spider monkey at summer camp."]}
+ ,{a:"Chowder",c:["Some characters' clothes are moving patterns.","His pet Kimchi is a little stink cloud.","Shnitzel only says one word: radda.","His teacher Mung Daal is a chef.","He wants to become a great chef someday.","Chowder, the hungry apprentice."]}
+ ,{a:"Cow and Chicken",c:["The Red Guy shows up in a new disguise every episode.","You never see their parents above the waist.","It came with a segment called I Am Weasel.","The big sister is a cow.","The little brother is a chicken.","Cow and Chicken."]}
+ ,{a:"Hi Hi Puffy AmiYumi",c:["Based on a real Japanese pop duo.","Their manager Kaz is always stressed about money.","One is cheerful, one is a punk.","Clips of the real singers show up between segments.","They tour the world on a bus.","Ami and Yumi."]}
+ ,{a:"The Marvelous Misadventures of Flapjack",c:["A captain is obsessed with finding Candied Island.","Set in Stormalong Harbor.","A boy was raised by a talking whale named Bubbie.","Everything gets super gross close-ups.","The captain's name is K'nuckles.","Flapjack and Captain K'nuckles."]}
+];
+const BOSS=[
+ {a:"ChalkZone",al:["chalk zone"],c:["Started as shorts on Oh Yeah! Cartoons.","His teacher Mr. Wilter is always on his case.","His friend Penny Sanchez is a genius.","Anything drawn becomes real in another world.","His sidekick Snap is a drawing.","Rudy Tabootie has magic chalk."]},
+ {a:"Megas XLR",al:["megas"],c:["Set in New Jersey.","The alien invaders are called the Glorft.","A soldier from the future, Kiva, wants her robot back.","The giant robot's head is a muscle car.","The pilot swapped its controls for video game ones.","Coop pilots a giant robot."]},
+ {a:"My Life as a Teenage Robot",al:["teenage robot"],c:["Set in Tremorton.","The popular girls, Brit and Tiff, can't stand her.","A nerdy kid named Sheldon has a huge crush on her.","Her creator is Dr. Nora Wakeman.","Her model number is XJ-9.","Jenny is a robot who wants a normal teen life."]},
+ {a:"Dave the Barbarian",al:["dave barbarian"],c:["The narrator argues with the characters.","Their parents left to fight evil and put the kids in charge.","His uncle Oswidge is a terrible wizard.","Set in the kingdom of Udrogoth.","He'd rather knit and cook than fight.","A huge barbarian named Dave."]},
+ {a:"The Replacements",al:["replacements"],c:["An ad in a comic book changed these orphans' lives.","The company is called Fleemco.","Their mom is a secret agent.","Their dad is a stuntman named Dick Daring.","One phone call can replace any adult.","Todd and Riley Daring."]},
+ {a:"El Tigre",al:["el tigre the adventures of manny rivera","manny rivera"],c:["Set in Miracle City.","His dad is a hero. His grandpa is a villain.","A skeleton villain plays a guitar.","His best friend is Frida Suarez.","His belt buckle transforms him.","Manny Rivera has to choose good or evil."]},
+ {a:"Invader Zim",al:["zim"],c:["The school is spelled Skool.","Where he comes from, the tallest are in charge.","His teacher Ms. Bitters is terrifying.","Only Dib knows the truth.","His robot GIR loves tacos and waffles.","Zim is an Irken invader."]}
+];
+const CHANS=[{k:"n",name:"NCK",short:"NCK",list:NICK,cls:"c-nick",seed:11},{k:"c",name:"CN",short:"CN",list:CN,cls:"c-cn",seed:22},{k:"d",name:"DSN",short:"DSN",list:DISNEY,cls:"c-dis",seed:33}];
+const ALLP=[...NICK,...DISNEY,...CN];
+
+const CHANNEL_SHOWS=[
+ ["SpongeBob SquarePants","N"],["The Fairly OddParents","N"],["Danny Phantom","N"],["Avatar: The Last Airbender","N"],
+ ["The Adventures of Jimmy Neutron: Boy Genius","N"],["Rugrats","N"],["Hey Arnold!","N"],["iCarly","N"],["Drake & Josh","N"],
+ ["Zoey 101","N"],["Ned's Declassified School Survival Guide","N"],["Rocket Power","N"],["ChalkZone","N"],["Invader Zim","N"],
+ ["CatDog","N"],["The Wild Thornberrys","N"],["My Life as a Teenage Robot","N"],["The Amanda Show","N"],["El Tigre","N"],
+ ["Dexter's Laboratory","C"],["The Powerpuff Girls","C"],["Ed, Edd n Eddy","C"],["Courage the Cowardly Dog","C"],
+ ["Codename: Kids Next Door","C"],["Samurai Jack","C"],["Foster's Home for Imaginary Friends","C"],
+ ["The Grim Adventures of Billy & Mandy","C"],["Ben 10","C"],["Johnny Bravo","C"],["Teen Titans","C"],["Camp Lazlo","C"],
+ ["Chowder","C"],["Megas XLR","C"],["Kim Possible","D"],["Lizzie McGuire","D"],["That's So Raven","D"],["Even Stevens","D"],
+ ["The Suite Life of Zack & Cody","D"],["Phineas and Ferb","D"],["Hannah Montana","D"],["The Proud Family","D"],
+ ["American Dragon: Jake Long","D"],["Wizards of Waverly Place","D"],["The Replacements","D"],["Phil of the Future","D"],
+ ["Cory in the House","D"],["Lilo & Stitch: The Series","D"],["Dave the Barbarian","D"],["Kenan & Kel","N"],["As Told by Ginger","N"],["The Emperor's New School","D"],["Sonny with a Chance","D"],["Good Luck Charlie","D"],["Cow and Chicken","C"],["Hi Hi Puffy AmiYumi","C"],["The Marvelous Misadventures of Flapjack","C"],
+ ["Brandy & Mr. Whiskers","D"]
+];
+const CH_NAME={N:"NCK",C:"CN",D:"DSN"};
+const ALL_SHOWS=[...new Set(CHANNEL_SHOWS.map(s=>s[0]))].sort();
+const ALIASES={"jimmy neutron":"The Adventures of Jimmy Neutron: Boy Genius","avatar":"Avatar: The Last Airbender","atla":"Avatar: The Last Airbender",
+ "kids next door":"Codename: Kids Next Door","knd":"Codename: Kids Next Door","fosters":"Foster's Home for Imaginary Friends",
+ "suite life":"The Suite Life of Zack & Cody","spongebob":"SpongeBob SquarePants","fairly oddparents":"The Fairly OddParents",
+ "fairly odd parents":"The Fairly OddParents","billy and mandy":"The Grim Adventures of Billy & Mandy","courage":"Courage the Cowardly Dog",
+ "powerpuff girls":"The Powerpuff Girls","ppg":"The Powerpuff Girls","dexters lab":"Dexter's Laboratory","ed edd and eddy":"Ed, Edd n Eddy","neds declassified":"Ned's Declassified School Survival Guide","neds":"Ned's Declassified School Survival Guide","thornberrys":"The Wild Thornberrys","american dragon":"American Dragon: Jake Long","jake long":"American Dragon: Jake Long","wizards":"Wizards of Waverly Place","lilo and stitch":"Lilo & Stitch: The Series","emperors new school":"The Emperor's New School","sonny":"Sonny with a Chance","flapjack":"The Marvelous Misadventures of Flapjack","puffy amiyumi":"Hi Hi Puffy AmiYumi","ben10":"Ben 10","ginger":"As Told by Ginger"};
+
+const POLLS=[
+ ["Better cartoon villain?","Plankton","Dr. Doofenshmirtz"],
+ ["Better sitcom?","Drake & Josh","The Suite Life of Zack & Cody"],
+ ["Better girl hero?","Kim Possible","The Powerpuff Girls"],
+ ["Better boy genius?","Dexter","Jimmy Neutron"],
+ ["Where would you rather live?","Bikini Bottom","Foster's Home"],
+ ["Better secret identity?","Hannah Montana","Danny Phantom"],
+ ["Which scared you more as a kid?","Courage the Cowardly Dog","Invader Zim"],
+ ["Better channel, final answer?","NCK","DSN"],
+ ["Better magic?","Wizards of Waverly Place","The Fairly OddParents"],
+ ["Better pet?","Gary the Snail","Rufus the mole-rat"],
+ ["Better animated epic?","Avatar: The Last Airbender","Teen Titans"],
+ ["Better best friend duo?","Ed and Eddy","Carl and Sheen"],
+ ["Better web show?","iCarly","Zoey 101 dorm life"],
+ ["Better theme song?","SpongeBob SquarePants","Kim Possible"]
+];
+
+const ROOM_ITEMS=[
+ {d:1,e:"📺",n:"Chunky CRT TV",x:58,y:38},
+ {d:2,e:"🪀",n:"Yo-yo",x:30,y:70},
+ {d:3,e:"📼",n:"VHS stack",x:70,y:70},
+ {d:5,e:"💿",n:"Burned CD stack",x:40,y:40},
+ {d:7,e:"🎧",n:"Giant headphones",x:22,y:42},
+ {d:10,e:"🕹️",n:"Game controller",x:52,y:72},
+ {d:14,e:"📱",n:"Flip phone",x:84,y:44},
+ {d:21,e:"🛋️",n:"Inflatable chair",x:10,y:68},
+ {d:30,e:"🫧",n:"Lava lamp",x:86,y:66},
+ {d:45,e:"🛹",n:"Skateboard",x:40,y:84},
+ {d:60,e:"🌟",n:"Glow-in-the-dark stars",x:46,y:8},
+ {d:100,e:"🏆",n:"After School legend trophy",x:72,y:12}
+];
+
+/* ================= HELPERS ================= */
+const $=id=>document.getElementById(id);
+const norm=s=>String(s).toLowerCase().replace(/&/g,"and").replace(/[^a-z0-9]/g,"");
+const LS={get(k,d){try{const v=localStorage.getItem("as2_"+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("as2_"+k,JSON.stringify(v))}catch(e){}}};
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function shuffle(arr,seed){const a=[...arr],r=mulberry(seed);for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const LAUNCH=new Date(2026,10,18), LAUNCH_MON=new Date(2026,10,16);
+const now=new Date(), today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+const DAY=Math.max(1,Math.round((today-LAUNCH)/864e5)+1);
+const WEEK=Math.max(0,Math.floor(Math.round((today-LAUNCH_MON)/864e5)/7));
+const WD=(today.getDay()+6)%7; // Mon=0..Sun=6
+const IS_BOSS=WD===4;
+const BOSS_CH={k:"b",name:"Boss Round",short:"Boss",cls:"c-boss"};
+const ACTIVE=IS_BOSS?[...CHANS,BOSS_CH]:CHANS;
+const SLOTS=["n","c","d","b"];
+function copyText(text,box){
+  const show=()=>{box.style.display="block";box.value=text;box.select()};
+  try{navigator.clipboard.writeText(text).then(()=>{box.style.display="block";box.value="Copied. Paste it in the group chat.";setTimeout(()=>box.style.display="none",1800)},show)}catch(e){show()}
+}
+function esc(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML}
+
+/* ================= SOUND ================= */
+let soundOn=LS.get("sound",true), actx=null;
+function ac(){if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}return actx}
+function tone(f,t0,dur,type="square",vol=.06){const c=ac();if(!c||!soundOn)return;try{const o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.value=f;
+  g.gain.setValueAtTime(vol,c.currentTime+t0);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+t0+dur);o.connect(g).connect(c.destination);o.start(c.currentTime+t0);o.stop(c.currentTime+t0+dur+.02)}catch(e){}}
+function noise(dur=.35){const c=ac();if(!c||!soundOn)return;try{const b=c.createBuffer(1,c.sampleRate*dur,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);
+  const s=c.createBufferSource(),g=c.createGain();g.gain.value=.08;s.buffer=b;s.connect(g).connect(c.destination);s.start()}catch(e){}}
+const SFX={
+  click:()=>tone(880,0,.05),
+  wrong:()=>{tone(220,0,.12,"sawtooth");tone(160,.1,.18,"sawtooth")},
+  win:()=>{noise(.3);[523,659,784,1047].forEach((f,i)=>tone(f,.3+i*.09,.18));tone(1319,.68,.4,"triangle",.07)},
+  lose:()=>{noise(.3);[392,330,262,196].forEach((f,i)=>tone(f,.3+i*.15,.22,"triangle"))},
+  pop:()=>{tone(660,0,.08,"triangle");tone(990,.07,.12,"triangle")},
+  checker:()=>{for(let i=0;i<10;i++)tone(300+i*70,i*.06,.05,"square",.035);[784,1047].forEach((f,i)=>tone(f,.75+i*.1,.18,"square",.05))},
+  chime:()=>{[1047,1319,1568,2093].forEach((f,i)=>tone(f,.15+i*.08,.35,"sine",.05))},
+  sparkle:()=>{for(let i=0;i<14;i++)tone(1800+Math.random()*1600,i*.08,.12,"sine",.025);[1568,2093,2637].forEach((f,i)=>tone(f,1.2+i*.07,.4,"triangle",.05))},
+  squelch:()=>{const c=ac();if(!c||!soundOn)return;try{
+    [[0,220,55],[.18,160,45],[.34,260,70]].forEach(([t,f1,f2])=>{const o=c.createOscillator(),g=c.createGain(),fl=c.createBiquadFilter();
+      o.type="sawtooth";fl.type="lowpass";fl.frequency.value=500;o.frequency.setValueAtTime(f1,c.currentTime+t);o.frequency.exponentialRampToValueAtTime(f2,c.currentTime+t+.22);
+      g.gain.setValueAtTime(.0001,c.currentTime+t);g.gain.exponentialRampToValueAtTime(.12,c.currentTime+t+.03);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+t+.25);
+      o.connect(fl).connect(g).connect(c.destination);o.start(c.currentTime+t);o.stop(c.currentTime+t+.3)});
+    [523,659,784].forEach((f,i)=>tone(f,.55+i*.09,.16,"triangle",.06))}catch(e){}}
+};
+$("soundBtn").textContent=soundOn?"🔊":"🔇";
+$("soundBtn").onclick=()=>{soundOn=!soundOn;LS.set("sound",soundOn);$("soundBtn").textContent=soundOn?"🔊":"🔇";if(soundOn)SFX.click()};
+
+/* ================= CONFETTI ================= */
+const fx=$("fx"),fc=fx.getContext("2d");let parts=[],fxOn=false;
+function sizeFx(){fx.width=innerWidth*devicePixelRatio;fx.height=innerHeight*devicePixelRatio;fc.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
+addEventListener("resize",sizeFx);sizeFx();
+function confetti(){const cols=["#9be22d","#ff7a1a","#ff4fa3","#2f7bff","#fff6e0"];
+  for(let i=0;i<140;i++)parts.push({x:innerWidth/2+(Math.random()-.5)*120,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*13-4,
+    s:Math.random()*9+5,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:cols[i%cols.length],blob:Math.random()<.3,life:1});
+  if(!fxOn){fxOn=true;requestAnimationFrame(tick)}}
+function tick(){fc.clearRect(0,0,innerWidth,innerHeight);parts.forEach(p=>{p.vy+=(p.g===undefined?.35:p.g);p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.r+=p.vr;p.life-=(p.decay||.007);
+  fc.save();fc.globalAlpha=Math.max(0,p.life);fc.translate(p.x,p.y);fc.rotate(p.r);fc.fillStyle=p.c;
+  if(p.star){fc.shadowColor=p.c;fc.shadowBlur=p.s*1.5;starPath(p.s);fc.fill()}else if(p.blob){fc.beginPath();fc.arc(0,0,p.s*.7,0,7);fc.fill()}else fc.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);fc.restore()});
+  parts=parts.filter(p=>p.life>0&&p.y<innerHeight+40&&p.y>-200);if(parts.length)requestAnimationFrame(tick);else{fxOn=false;fc.clearRect(0,0,innerWidth,innerHeight)}}
+
+function starPath(r){fc.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4,rr=i%2?r*.28:r;fc.lineTo(Math.cos(a)*rr,Math.sin(a)*rr)}fc.closePath()}
+function startFx(){if(!fxOn){fxOn=true;requestAnimationFrame(tick)}}
+
+/* ================= CN: CHECKERBOARD WIPE ================= */
+function checkerWipe(){
+  document.querySelectorAll(".checker").forEach(n=>n.remove());
+  const size=Math.max(56,Math.round(innerWidth/9)),cols=Math.ceil(innerWidth/size),rows=Math.ceil(innerHeight/size);
+  const el=document.createElement("div");el.className="checker";
+  el.style.gridTemplateColumns="repeat("+cols+",1fr)";el.style.gridTemplateRows="repeat("+rows+",1fr)";
+  const maxd=cols+rows;
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const t=document.createElement("i");if((r+c)%2)t.className="b";
+    const d=(r+c)/maxd;t.style.animationDelay=(d*.6).toFixed(3)+"s,"+(0.9+d*.6).toFixed(3)+"s";el.appendChild(t)}
+  document.body.appendChild(el);SFX.checker();
+  setTimeout(()=>el.remove(),2000);
+}
+
+/* ================= DSN: YOU'RE WATCHING + WAND ================= */
+function watchingCard(){
+  document.querySelectorAll(".watching").forEach(n=>n.remove());
+  const el=document.createElement("div");el.className="watching";
+  el.innerHTML='<div class="wc"><small>YOU\'RE WATCHING</small><b>AFTER<br>SCHOOL</b></div>';
+  document.body.appendChild(el);SFX.chime();
+  setTimeout(()=>el.remove(),2000);
+  setTimeout(wand,1500);
+}
+function wand(){
+  const W=innerWidth,H=innerHeight,P=[[-30,H*.78],[W*.25,H*.05],[W*.75,H*.95],[W+30,H*.2]];
+  const t0=performance.now(),dur=1300,cols=["#ffffff","#ffe27a","#9fd8ff","#ffd1f2"];
+  SFX.sparkle();
+  function bz(t,i){const u=1-t;return u*u*u*P[0][i]+3*u*u*t*P[1][i]+3*u*t*t*P[2][i]+t*t*t*P[3][i]}
+  (function step(now){const t=Math.min(1,(now-t0)/dur),x=bz(t,0),y=bz(t,1);
+    parts.push({x,y,vx:0,vy:0,g:0,s:16,r:t*6,vr:0,c:"#ffffff",star:true,life:.25,decay:.12});
+    for(let i=0;i<4;i++)parts.push({x:x+(Math.random()-.5)*14,y:y+(Math.random()-.5)*14,vx:(Math.random()-.5)*2.2,vy:(Math.random()-.5)*2.2,
+      g:.04,s:2+Math.random()*5,r:Math.random()*3,vr:(Math.random()-.5)*.2,c:cols[Math.floor(Math.random()*cols.length)],star:true,life:1,decay:.012+Math.random()*.012});
+    startFx();if(t<1)requestAnimationFrame(step);
+    else for(let i=0;i<60;i++){const a=Math.random()*7,v=2+Math.random()*7;parts.push({x:W-20,y:H*.25,vx:Math.cos(a)*v-3,vy:Math.sin(a)*v,g:.08,s:3+Math.random()*6,r:0,vr:.1,c:cols[i%4],star:true,life:1,decay:.014})}
+  })(t0);
+}
+
+/* ================= SLIME ================= */
+function slime(){
+  document.querySelectorAll(".slime").forEach(n=>n.remove());
+  const G="#7fd61f",H="#b6f25a";
+  let base='<path d="M0,0 H100 V16 ';
+  for(let x=100;x>0;x-=5){const y=16+Math.random()*6;base+='Q'+(x-2.5)+','+(y+4)+' '+(x-5)+','+(16+Math.random()*4)+' '}
+  base+='V0 Z" fill="'+G+'"/>';
+  let drips="";
+  for(let i=0;i<16;i++){const w=2+Math.random()*4.5,x=Math.random()*(100-w),h=18+Math.random()*70,d=(Math.random()*.5).toFixed(2);
+    drips+='<g class="drip" style="animation-delay:'+(.25+ +d)+'s"><rect x="'+x+'" y="12" width="'+w+'" height="'+h+'" rx="'+(w/2)+'" fill="'+G+'"/>'+
+      '<ellipse cx="'+(x+w/2)+'" cy="'+(12+h)+'" rx="'+(w*.75)+'" ry="'+(w*.55)+'" fill="'+G+'"/>'+
+      '<rect x="'+(x+w*.2)+'" y="16" width="'+(w*.18)+'" height="'+(h*.6)+'" rx="'+(w*.09)+'" fill="'+H+'" opacity=".7"/></g>'}
+  let shine='';for(let i=0;i<6;i++){shine+='<ellipse cx="'+(8+Math.random()*84)+'" cy="'+(5+Math.random()*7)+'" rx="'+(2+Math.random()*4)+'" ry="1.2" fill="'+H+'" opacity=".8"/>'}
+  const el=document.createElement("div");el.className="slime";
+  el.innerHTML='<svg viewBox="0 0 100 100" preserveAspectRatio="none">'+drips+base+shine+'</svg>';
+  document.body.appendChild(el);
+  SFX.squelch();
+  setTimeout(()=>el.classList.add("bye"),2300);
+  setTimeout(()=>el.remove(),3300);
+}
+
+/* ================= STATE ================= */
+// me.days[day] = {g:[{t,ok,skip,peek}], done, won, clue, pts, chan:{right,used}, poll:'a'|'b'}
+let me=LS.get("me",{days:{},group:null});
+if(!me.days)me.days={};
+let db=null, user=null, uid=null, myRef=null, players={}, canWrite=false, readOnly=false;
+function saveLocal(){LS.set("me",me)}
+let writing=false,pendingWrite=false;
+async function sync(){
+  saveLocal();
+  if(!myRef||readOnly)return;
+  if(writing){pendingWrite=true;return}
+  writing=true;
+  try{await myRef.set({days:me.days,group:me.group||null,updated:Date.now()})}
+  catch(e){if(e&&e.code==="invalid_argument"){readOnly=true;$("crewNote").textContent="You can view this game but not save scores. Ask the owner to share it with you as a Contributor."}}
+  writing=false;
+  if(pendingWrite){pendingWrite=false;sync()}
+}
+function dayRec(){let d=me.days[DAY];if(!d||d.g){d=me.days[DAY]={}}return d}
+function todayRec(){return dayRec()}
+function chRec(k){const d=dayRec();return d[k]||(d[k]={g:[],done:false})}
+function recsOf(day){return day?SLOTS.map(k=>day[k]).filter(r=>r&&r.done):[]}
+function streakInfo(days){
+  const played=Object.keys(days).map(Number).filter(d=>recsOf(days[d]).length).sort((a,b)=>a-b);
+  let best=0,run=0,prev=null;
+  played.forEach(d=>{run=(prev!==null&&d===prev+1)?run+1:1;best=Math.max(best,run);prev=d});
+  let cur=0;
+  if(played.length){const last=played[played.length-1];if(last>=DAY-1){cur=1;for(let i=played.length-2;i>=0&&played[i]===played[i+1]-1;i--)cur++}}
+  let games=0,wins=0;played.forEach(d=>recsOf(days[d]).forEach(r=>{games++;if(r.won)wins++}));
+  return {cur,best,played:played.length,games,wins};
+}
+
+/* ================= NAME THAT SHOW ================= */
+const MAX=6;
+let puzzle,rec,practice=false,curCh=null;
+function dailyPuzzle(k){
+  if(k==="b")return {...BOSS[WEEK%BOSS.length],boss:true};
+  const c=CHANS.find(x=>x.k===k);
+  const list=shuffle(c.list,c.seed);
+  return list[(DAY-1)%list.length];
+}
+function chInfo(k){return ACTIVE.find(x=>x.k===k)}
+function chTag(){if(practice)return "PRACTICE";const i=ACTIVE.findIndex(c=>c.k===curCh);return "CH "+String(i+1).padStart(2,"0")}
+function dayPts(day){return recsOf(day).reduce((s,r)=>s+(r.pts||0),0)+((day&&day.chan&&day.chan.right)||0)*10}
+function renderPicker(){
+  const p=$("picker");p.innerHTML="";p.classList.toggle("four",ACTIVE.length===4);
+  const d=me.days[DAY]||{};
+  ACTIVE.forEach((c,i)=>{const r=d[c.k];const b=document.createElement("button");
+    b.className="rkey "+c.cls+(c.k===curCh&&!practice?" sel":"");
+    const st=!r||!r.g||!r.g.length?"":r.done?(r.won?"won":"lost"):"go";
+    b.title=c.name+(st==="won"?": solved, "+r.pts+" pts":st==="lost"?": missed":st==="go"?": in progress":"");
+    b.innerHTML='<span class="dot '+st+'"></span><div class="num">'+(i+1)+'</div><div class="nm">'+esc(c.short.toUpperCase())+'</div>';
+    b.onclick=()=>pickCh(c.k);p.appendChild(b)});
+}
+function blinkLed(){const l=$("led");l.classList.add("on");setTimeout(()=>l.classList.remove("on"),180)}
+function flipSfx(){tone(1200,0,.03,"square",.04);noise(.18)}
+let tvOn=true;
+function allDone(){const d=me.days[DAY]||{};return ACTIVE.every(c=>d[c.k]&&d[c.k].done)}
+function crtText(){
+  if(allDone()){$("crtTitle").textContent="SEE YOU TOMORROW";$("crtSub").innerHTML='New shows in <span class="offCount">'+$("countdown").textContent+'</span>'}
+  else{$("crtTitle").textContent="OFF AIR";$("crtSub").textContent="Press power to turn it back on"}
+}
+function powerOff(silent){
+  if(!tvOn)return;tvOn=false;const c=$("crt");crtText();
+  c.className="crt show"+(silent?"":" off-anim");
+  $("guessIn").disabled=true;$("pwrBtn").classList.remove("pulse");
+  if(!silent){ac();blinkLed();tone(900,0,.05,"square",.05);[600,420,260,140].forEach((f,i)=>tone(f,.04+i*.07,.1,"sine",.05))}
+}
+function powerOn(){
+  if(tvOn)return;tvOn=true;const c=$("crt");
+  ac();blinkLed();tone(900,0,.05,"square",.05);[140,260,420,700].forEach((f,i)=>tone(f,.04+i*.06,.1,"sine",.05));noise(.15);
+  c.className="crt show on-anim";$("guessIn").disabled=false;
+  setTimeout(()=>{if(tvOn)c.className="crt"},520);
+}
+$("pwrBtn").onclick=()=>tvOn?powerOff(false):powerOn();
+function stepCh(dir){const i=ACTIVE.findIndex(c=>c.k===curCh);pickCh(ACTIVE[(i+dir+ACTIVE.length)%ACTIVE.length].k)}
+$("chUp").onclick=()=>stepCh(1);$("chDown").onclick=()=>stepCh(-1);
+document.addEventListener("keydown",e=>{
+  if(e.target&&e.target.tagName==="INPUT")return;
+  if($("v-show").classList.contains("hide"))return;
+  if(e.key==="ArrowUp"){e.preventDefault();stepCh(1)}
+  else if(e.key==="ArrowDown"){e.preventDefault();stepCh(-1)}
+  else if(/^[1-4]$/.test(e.key)&&ACTIVE[+e.key-1])pickCh(ACTIVE[+e.key-1].k);
+});
+function pickCh(k){
+  if(!tvOn)powerOn();
+  ac();blinkLed();flipSfx();
+  curCh=k;LS.set("lastCh",k);startShow(false);
+  const scr=$("screen"),st=scr.querySelector(".static");
+  if(st){st.classList.remove("on");void st.offsetWidth;st.classList.add("on")}
+  const i=ACTIVE.findIndex(c=>c.k===k);
+  scr.querySelectorAll(".osd").forEach(n=>n.remove());
+  const o=document.createElement("div");o.className="osd";o.textContent="CH "+(i+1)+" "+ACTIVE[i].short.toUpperCase();scr.appendChild(o);
+}
+function firstOpen(){const d=me.days[DAY]||{};const last=LS.get("lastCh",null);
+  if(last&&chInfo(last)&&!(d[last]&&d[last].done))return last;
+  const open=ACTIVE.find(c=>!(d[c.k]&&d[c.k].done));return open?open.k:(last&&chInfo(last)?last:"n")}
+function startShow(isPractice){
+  practice=isPractice;
+  if(practice){puzzle=ALLP[Math.floor(Math.random()*ALLP.length)];rec={g:[],done:false}}
+  else{if(!curCh)curCh=firstOpen();puzzle=dailyPuzzle(curCh);rec=chRec(curCh)}
+  const tv=document.querySelector(".tv");tv.className="tv"+(practice?"":" ch-"+curCh);
+  renderPicker();
+  $("dayLbl").textContent=practice?"PRACTICE":(chInfo(curCh).short.toUpperCase()+" · DAY "+DAY);
+  $("guessIn").placeholder=puzzle.boss?"Boss round. No hints. Type it exactly...":"Type a show...";
+  $("guessIn").value="";
+  $("playArea").classList.toggle("hide",rec.done);
+  $("resultArea").classList.toggle("hide",!rec.done);
+  renderShow();
+  if(rec.done)showResult(false);
+  renderCrowd();renderPoll();
+}
+function cluesShown(){const used=rec.g.length;return Math.min(MAX,used+1)}
+function guessesUsed(){return rec.g.filter(g=>!g.peek).length}
+function curPts(){
+  const k=cluesShown();let p=(MAX+1-k)*100;if(rec.g.some(g=>g.peek))p-=150;p=Math.max(50,p);if(puzzle.boss)p*=2;return p;
+}
+function renderShow(){
+  const scr=$("screen");
+  if(rec.done){renderEndScreen(false);}
+  else{
+    const k=cluesShown();
+    scr.innerHTML='<div class="static" id="static"></div><span class="ch">'+chTag()+'</span>';
+    puzzle.c.slice(0,k).forEach((c,i)=>{const d=document.createElement("div");d.className="clue";d.innerHTML='<span class="n">'+(i+1)+'.</span> '+esc(c);
+      if(i<k-1)d.style.animation="none";scr.appendChild(d)});
+    $("ptsLbl").textContent=practice?"":curPts()+" PTS";
+  }
+  const p=$("pips");p.innerHTML="";
+  for(let i=0;i<MAX;i++){const s=document.createElement("span");s.className="pip";const g=rec.g[i];
+    if(g)s.classList.add(g.ok?"hit":g.peek?"peek":g.skip?"skip":"miss");p.appendChild(s)}
+  const h=$("history");h.innerHTML="";
+  rec.g.filter(g=>!g.ok).forEach(g=>{const d=document.createElement("div");d.className="h "+(g.peek?"p":g.skip?"s":"x");d.textContent=g.peek?"Peeked":g.skip?"Skipped":g.t;h.appendChild(d)});
+  $("peekBtn").disabled=practice||rec.g.some(g=>g.peek)||cluesShown()>=MAX;
+}
+function renderEndScreen(animate){
+  const scr=$("screen");
+  if(rec.won){
+    scr.innerHTML='<div class="static'+(animate?' on':'')+'"></div><span class="ch">'+chTag()+'</span><div class="now"><small>NOW PLAYING</small><b>'+esc(puzzle.a)+'</b></div>';
+  }else{
+    const cols=["#c0c0c0","#c0c000","#00c0c0","#00c000","#c000c0","#c00000","#0000c0"];
+    scr.innerHTML='<div class="static'+(animate?' on':'')+'"></div><div class="bars">'+cols.map(c=>'<i style="background:'+c+'"></i>').join("")+'</div><div class="brb"><b>WE\'LL BE RIGHT BACK</b><span>It was '+esc(puzzle.a)+'</span></div>';
+  }
+  $("ptsLbl").textContent=practice?"":(rec.pts||0)+" PTS";
+}
+function resolve(text){
+  const n=norm(text);if(!n)return null;
+  if(puzzle.al&&puzzle.al.some(a=>norm(a)===n))return puzzle.a;
+  if(norm(puzzle.a)===n||norm(puzzle.a.replace(/^the /i,""))===n)return puzzle.a;
+  for(const k in ALIASES)if(norm(k)===n)return ALIASES[k];
+  return ALL_SHOWS.find(s=>norm(s)===n)||ALL_SHOWS.find(s=>norm(s.replace(/^the /i,""))===n)||text.trim();
+}
+function act(kind){
+  if(rec.done)return;
+  ac();
+  let entry;
+  if(kind==="skip")entry={skip:true,ok:false};
+  else if(kind==="peek"){if(rec.g.some(g=>g.peek)||cluesShown()>=MAX)return;entry={peek:true,ok:false}}
+  else{const t=resolve($("guessIn").value);if(!t)return;if(rec.g.some(g=>g.t===t)){$("guessIn").value="";return}entry={t,ok:norm(t)===norm(puzzle.a)}}
+  rec.g.push(entry);$("guessIn").value="";hideSugg();
+  if(entry.ok){rec.done=true;rec.won=true;rec.clue=cluesShown()-1||1;rec.clue=Math.min(MAX,rec.g.length);rec.pts=ptsForWin()}
+  else if(rec.g.length>=MAX){rec.done=true;rec.won=false;rec.pts=0}
+  if(!entry.ok&&!rec.done){
+    if(kind==="peek")SFX.pop();else{SFX.wrong();$("screen").classList.remove("shake");void $("screen").offsetWidth;$("screen").classList.add("shake")}
+    const st=document.querySelector("#screen .static");
+  }
+  renderShow();
+  if(rec.done){
+    $("playArea").classList.add("hide");$("resultArea").classList.remove("hide");
+    showResult(true);
+  }
+  if(!practice)sync();
+}
+function ptsForWin(){let p=(MAX+1-rec.g.length)*100;if(rec.g.some(g=>g.peek))p-=150;p=Math.max(50,p);if(puzzle.boss)p*=2;return p}
+function gridStr(r){return r.g.map(g=>g.ok?"🟩":g.peek?"🟦":g.skip?"⬛":"🟥").join("")+"⬜".repeat(Math.max(0,MAX-r.g.length))}
+function showResult(animate){
+  if(animate){renderEndScreen(true);if(rec.won){if(NICK.includes(puzzle)){setTimeout(slime,200)}else if(CN.includes(puzzle)){setTimeout(checkerWipe,200)}else if(DISNEY.includes(puzzle)){setTimeout(watchingCard,200)}else{SFX.win();setTimeout(confetti,250)}}else SFX.lose()}
+  const won=rec.won;
+  $("resTitle").textContent=won?(rec.g.length===1?"FIRST TRY. LEGEND.":puzzle.boss?"BOSS DEFEATED":"YOU GOT IT"):"SO CLOSE";
+  $("resTitle").classList.toggle("lose",!won);
+  $("resGrid").textContent="📺 "+gridStr(rec);
+  const s=streakInfo(me.days);
+  $("stPts").textContent=practice?"-":dayPts(me.days[DAY]);
+  $("stWin").textContent=(s.games?Math.round(s.wins/s.games*100):0)+"%";
+  renderNext();
+  $("stStreak").textContent=s.cur;$("stBest").textContent=s.best;
+  $("shareBtn").classList.toggle("hide",practice);
+  $("practiceBtn").textContent=practice?"Play another practice round":"Play a practice round";
+  if(!practice){renderRoom(animate);renderCrowd();renderPoll()}
+}
+function renderNext(){
+  const box=$("nextCh"),lbl=$("nextLbl");box.innerHTML="";
+  if(practice){lbl.textContent="";return}
+  const d=me.days[DAY]||{};
+  const left=ACTIVE.filter(c=>!(d[c.k]&&d[c.k].done));
+  lbl.textContent=left.length?"KEEP WATCHING":"ALL CHANNELS DONE. HIT POWER TO SIGN OFF.";
+  $("pwrBtn").classList.toggle("pulse",!left.length&&tvOn);
+  left.forEach(c=>{const b=document.createElement("button");b.className="btn "+c.cls;b.textContent="Play "+c.name;b.onclick=()=>{SFX.click();pickCh(c.k);scrollTo({top:0,behavior:"smooth"})};box.appendChild(b)});
+}
+$("shareBtn").onclick=()=>{
+  const s=streakInfo(me.days),d=me.days[DAY]||{};
+  const lines=ACTIVE.filter(c=>d[c.k]&&d[c.k].done).map(c=>{const r=d[c.k];return (c.short+":").padEnd(7," ")+" "+gridStr(r)+" "+(r.won?r.g.length+"/"+MAX:"X/"+MAX)});
+  const txt=`After School, Day ${DAY} 📺\n${lines.join("\n")}\n${dayPts(d)} pts · 🔥 ${s.cur} day streak`;
+  copyText(txt,$("shareBox"));
+};
+$("practiceBtn").onclick=()=>{startShow(true);$("crowdCard").classList.add("hide");$("pollCard").classList.add("hide")};
+$("submitBtn").onclick=()=>act("guess");$("skipBtn").onclick=()=>act("skip");$("peekBtn").onclick=()=>act("peek");
+
+// autocomplete (off in boss rounds)
+let sel=-1;
+function hideSugg(){$("sugg").style.display="none";sel=-1}
+$("guessIn").addEventListener("input",()=>{
+  if(puzzle&&puzzle.boss){hideSugg();return}
+  const q=norm($("guessIn").value),box=$("sugg");
+  if(q.length<2){hideSugg();return}
+  const m=ALL_SHOWS.filter(s=>norm(s).includes(q)).slice(0,6);
+  if(!m.length){hideSugg();return}
+  box.innerHTML="";sel=-1;
+  m.forEach(s=>{const d=document.createElement("div");d.textContent=s;d.onmousedown=e=>{e.preventDefault();$("guessIn").value=s;hideSugg()};box.appendChild(d)});
+  box.style.display="block";
+});
+$("guessIn").addEventListener("keydown",e=>{
+  const items=[...$("sugg").children],open=$("sugg").style.display==="block";
+  if(e.key==="ArrowDown"&&open){sel=Math.min(sel+1,items.length-1);e.preventDefault()}
+  else if(e.key==="ArrowUp"&&open){sel=Math.max(sel-1,0);e.preventDefault()}
+  else if(e.key==="Enter"){if(open&&sel>=0){$("guessIn").value=items[sel].textContent;hideSugg()}else act("guess");e.preventDefault();return}
+  else if(e.key==="Escape"){hideSugg();return}
+  items.forEach((it,i)=>it.classList.toggle("on",i===sel));
+});
+$("guessIn").addEventListener("blur",()=>setTimeout(hideSugg,100));
+setInterval(()=>{const n=new Date(),t=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1);const s=Math.floor((t-n)/1000);
+  const t2=[Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(v=>String(v).padStart(2,"0")).join(":");
+  $("countdown").textContent=t2;document.querySelectorAll(".offCount").forEach(n=>n.textContent=t2)},1000);
+
+/* ================= CROWD + POLL ================= */
+function todays(){return Object.entries(players).map(([id,p])=>({id,r:p.days&&p.days[DAY]})).filter(x=>x.r)}
+function renderCrowd(){
+  const card=$("crowdCard");
+  if(practice||!rec||!rec.done){card.classList.add("hide");return}
+  card.classList.remove("hide");
+  const box=$("hist"),msg=$("crowdMsg");box.innerHTML="";
+  if(!db){card.classList.add("hide");return}
+  const list=todays().map(x=>({id:x.id,r:x.r[curCh]})).filter(x=>x.r&&x.r.done&&x.id!==uid);
+  list.push({id:uid||"me",r:rec});
+  const n=list.length;
+  if(n<=1){msg.textContent="You're the first one here today. Check back later to see how everyone did.";}
+  const b={1:0,2:0,3:0,4:0,5:0,6:0,X:0};
+  list.forEach(x=>{if(x.r.won)b[Math.min(6,x.r.clue||x.r.g.length)]++;else b.X++});
+  const mine=rec.won?String(rec.g.length):"X";
+  if(n>1){
+    if(rec.won){const better=list.filter(x=>x.r.won&&(x.r.clue||x.r.g.length)<=rec.g.length).length;
+      msg.textContent="Only "+Math.round(better/n*100)+"% of "+chInfo(curCh).name+" players got it by clue "+rec.g.length+". "+n+" played today.";}
+    else msg.textContent=Math.round((n-b.X)/n*100)+"% of players got it today. "+n+" played.";
+  }
+  const maxv=Math.max(1,...Object.values(b));
+  ["1","2","3","4","5","6","X"].forEach(k=>{const r=document.createElement("div");r.className="hb"+(k===mine?" me":"");
+    r.innerHTML='<span>'+k+'</span><div class="bar"><i style="width:'+(b[k]/maxv*100)+'%"></i></div><span>'+(n?Math.round(b[k]/n*100):0)+'%</span>';box.appendChild(r)});
+}
+function pollToday(){return POLLS[(DAY-1)%POLLS.length]}
+function renderPoll(){
+  const card=$("pollCard");
+  if(practice||!recsOf(me.days[DAY]).length){card.classList.add("hide");return}
+  card.classList.remove("hide");
+  const dr=dayRec();
+  const [q,a,b]=pollToday();$("pollQ").textContent=q;
+  const mine=dr.poll;
+  let ca=0,cb=0;
+  if(db){todays().forEach(x=>{if(x.id===uid)return;if(x.r.poll==="a")ca++;if(x.r.poll==="b")cb++})}
+  if(mine==="a")ca++;if(mine==="b")cb++;
+  const tot=ca+cb;
+  const box=$("pollBtns");box.innerHTML="";
+  [["a",a,ca],["b",b,cb]].forEach(([k,label,c])=>{
+    const btn=document.createElement("button");btn.className="btn "+(k==="a"?"alt":"pink")+(mine===k?" mine":"");
+    const pct=tot?Math.round(c/tot*100):0;
+    btn.innerHTML=(mine?'<div class="fill" style="width:'+pct+'%"></div>':'')+'<span>'+esc(label)+(mine?'<br>'+pct+'%':'')+'</span>';
+    btn.onclick=()=>{if(dr.poll===k)return;dr.poll=k;SFX.pop();sync();renderPoll()};
+    box.appendChild(btn);
+  });
+  $("pollNote").textContent=mine?(db?tot+" vote"+(tot===1?"":"s")+" so far. Tap the other side to switch.":"Your vote is saved. Everyone's results are coming soon."):"Pick a side to see the results.";
+}
+
+/* ================= WHICH CHANNEL ================= */
+const ROUND=15,TIME=45;
+let cList,cIdx,cRes,cTimer,cLeft,cLock=false;
+function chanList(){return shuffle(CHANNEL_SHOWS,DAY*7919).slice(0,ROUND)}
+function chanStart(){
+  ac();cList=chanList();cIdx=0;cRes=[];cLeft=TIME;
+  $("chanIntro").classList.add("hide");$("chanDone").classList.add("hide");$("chanPlay").classList.remove("hide");
+  chanShowCur();SFX.click();
+  cTimer=setInterval(()=>{cLeft-=.25;$("chanBar").style.width=Math.max(0,cLeft/TIME*100)+"%";$("chanTime").textContent=Math.max(0,Math.ceil(cLeft))+"s";if(cLeft<=0)chanEnd()},250);
+}
+function chanShowCur(){const c=$("chanShow");c.className="showcard";c.textContent=cList[cIdx][0];$("chanCount").textContent=(cIdx+1)+" / "+ROUND}
+function chanPick(ch){
+  if(cLock||!cList||cIdx>=ROUND)return;cLock=true;
+  const ok=cList[cIdx][1]===ch;cRes.push({s:cList[cIdx][0],a:cList[cIdx][1],ok});
+  $("chanShow").classList.add(ok?"good":"bad");ok?SFX.click():SFX.wrong();
+  setTimeout(()=>{cLock=false;cIdx++;if(cIdx>=ROUND)chanEnd();else chanShowCur()},260);
+}
+function chanEnd(){
+  if(!cTimer)return;clearInterval(cTimer);cTimer=null;
+  const right=cRes.filter(r=>r.ok).length,used=Math.round(TIME-Math.max(0,cLeft));
+  const r=todayRec();
+  if(!r.chan){r.chan={right,used,res:cRes.map(x=>x.ok?1:0)};sync()}
+  renderChanDone(right,used,cRes);
+  if(right>=12){SFX.win();confetti()}else SFX.lose();
+}
+function chanGrid(res){let g="";for(let i=0;i<ROUND;i++){const r=res[i];g+=r===undefined?"⬛":(r?"🟩":"🟥");if(i%5===4&&i<ROUND-1)g+="\n"}return g}
+function renderChanDone(right,used,res){
+  $("chanIntro").classList.add("hide");$("chanPlay").classList.add("hide");$("chanDone").classList.remove("hide");
+  const flags=res.map(x=>typeof x==="object"?(x.ok?1:0):x);
+  $("chanScore").textContent=right+" / "+ROUND;
+  $("chanGrid").textContent=chanGrid(flags);
+  $("chanMsg").textContent=(flags.length<ROUND?"Time ran out. ":"Finished in "+used+"s. ")+
+    (right>=14?"You basically lived on the couch.":right>=10?"Solid after-school credentials.":"Did your parents have parental controls on?");
+  renderChanCrowd();
+  const miss=Array.isArray(res)&&typeof res[0]==="object"?res.filter(r=>!r.ok):[];
+  const box=$("chanMissed");box.innerHTML="";
+  if(miss.length){box.innerHTML='<div class="lbl" style="margin-bottom:6px">YOU MISSED</div>';
+    miss.forEach(m=>{const d=document.createElement("div");d.className="h";d.textContent=m.s+" → "+CH_NAME[m.a];box.appendChild(d)})}
+}
+function renderChanCrowd(){
+  const el=$("chanCrowd");
+  if(!db){el.textContent="";return}
+  const scores=todays().map(x=>x.r.chan&&x.r.chan.right).filter(v=>typeof v==="number");
+  const mine=me.days[DAY]&&me.days[DAY].chan;
+  if(mine&&uid&&!players[uid])scores.push(mine.right);
+  if(scores.length<=1){el.textContent="You're the first to play the bonus today.";return}
+  const avg=(scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1);
+  const beat=mine?Math.round(scores.filter(s=>s<mine.right).length/scores.length*100):0;
+  el.textContent="Average today: "+avg+" / 15. You beat "+beat+"% of players.";
+}
+$("chanStart").onclick=chanStart;
+document.querySelectorAll(".chans .btn").forEach(b=>b.onclick=()=>chanPick(b.dataset.c));
+$("chanShare").onclick=()=>{const c=todayRec().chan;if(!c)return;
+  copyText(`After School: Which Channel? Day ${DAY}\n${chanGrid(c.res||[])}\n${c.right}/${ROUND}`,$("chanShareBox"))};
+document.addEventListener("keydown",e=>{if($("chanPlay").classList.contains("hide"))return;if(e.key==="1")chanPick("N");if(e.key==="2")chanPick("C");if(e.key==="3")chanPick("D")});
+function initChan(){const c=me.days[DAY]&&me.days[DAY].chan;if(c)renderChanDone(c.right,c.used,c.res||[])}
+
+/* ================= CREW ================= */
+function genCode(){const a="ABCDEFGHJKMNPQRSTUVWXYZ23456789";let s="";for(let i=0;i<5;i++)s+=a[Math.floor(Math.random()*a.length)];return s}
+function setGroup(code){me.group=code;sync();renderCrew()}
+$("newCrewBtn").onclick=()=>{SFX.pop();setGroup(genCode())};
+$("joinBtn").onclick=()=>{const c=$("codeIn").value.toUpperCase().replace(/[^A-Z0-9]/g,"");if(c.length<4){$("crewNote").textContent="Crew codes are at least 4 letters or numbers.";return}SFX.pop();$("crewNote").textContent="";setGroup(c)};
+$("leaveBtn").onclick=()=>setGroup(null);
+$("copyCode").onclick=()=>{const t="Join my After School crew. Code: "+me.group;try{navigator.clipboard.writeText(t).then(()=>{$("crewNote").textContent="Code copied."},()=>{$("crewNote").textContent=t})}catch(e){$("crewNote").textContent=t}};
+async function renderCrew(){
+  $("crewOff").classList.toggle("hide",!!db);
+  $("crewJoin").classList.toggle("hide",!db||!!me.group);
+  $("crewOn").classList.toggle("hide",!db||!me.group);
+  if(!db||!me.group)return;
+  $("crewCode").textContent=me.group;
+  const members=Object.entries(players).filter(([id,p])=>p.group===me.group);
+  if(uid&&!members.some(([id])=>id===uid))members.push([uid,{days:me.days,group:me.group}]);
+  const rows=members.map(([id,p])=>{const d=p.days||{};const t=d[DAY]||{};
+    let wk=0;for(let i=0;i<7;i++){wk+=dayPts(d[DAY-i])}
+    return {id,today:dayPts(t),played:recsOf(t).length>0||!!t.chan,wk}}).sort((a,b)=>b.wk-a.wk||b.today-a.today);
+  let names={};
+  try{if(user&&user.profiles)names=await user.profiles(rows.map(r=>r.id))||{}}catch(e){}
+  const lb=$("lb");lb.innerHTML='<div class="lr head"><span>#</span><span>Name</span><span>Today</span><span>Week</span></div>';
+  rows.forEach((r,i)=>{const d=document.createElement("div");d.className="lr"+(r.id===uid?" me":"");
+    const nm=(names[r.id]&&names[r.id].name)||(r.id===uid?"You":"Someone");
+    d.innerHTML='<b>'+(i+1)+'</b><span></span><span>'+(r.played?r.today:"-")+'</span><span>'+r.wk+'</span>';
+    d.children[1].textContent=nm+(r.id===uid&&nm!=="You"?" (you)":"");lb.appendChild(d)});
+  if(rows.length===1)$("crewNote").textContent="Just you so far. Send the code to your people.";
+  else if(!readOnly)$("crewNote").textContent="";
+}
+
+/* ================= ROOM ================= */
+let lastBest=LS.get("lastBest",0);
+function renderRoom(animate){
+  const best=streakInfo(me.days).best;
+  $("roomStreak").textContent="BEST STREAK "+best;
+  const room=$("room");room.querySelectorAll(".item").forEach(n=>n.remove());
+  ROOM_ITEMS.forEach(it=>{const d=document.createElement("div");const open=best>=it.d;
+    d.className="item"+(open?"":" locked")+(open&&animate&&it.d>lastBest?" new":"");
+    d.style.left=it.x+"%";d.style.top=it.y+"%";d.style.transform="translate(-50%,-50%)";d.title=open?it.n:"Unlocks at a "+it.d+" day streak";
+    d.innerHTML=it.e+(open?"":'<small>DAY '+it.d+'</small>');room.appendChild(d)});
+  const u=$("unlocks");u.innerHTML="";
+  ROOM_ITEMS.forEach(it=>{const d=document.createElement("div");d.className="un"+(best>=it.d?"":" lk");d.textContent=(best>=it.d?it.e+" ":"🔒 ")+it.n+" · "+it.d+(it.d===1?" day":" days");u.appendChild(d)});
+  if(best>lastBest){const fresh=ROOM_ITEMS.filter(it=>it.d>lastBest&&it.d<=best);lastBest=best;LS.set("lastBest",best);
+    if(animate&&fresh.length){const f=fresh[fresh.length-1];$("crowdMsg");setTimeout(()=>toast("New for your room: "+f.e+" "+f.n),1200)}}
+}
+function toast(t){const d=document.createElement("div");d.textContent=t;
+  d.style.cssText="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#9be22d;color:#120a1f;border:3px solid #120a1f;border-radius:14px;padding:12px 16px;font:900 14px Nunito;box-shadow:4px 4px 0 #120a1f;z-index:60;animation:in .3s both";
+  document.body.appendChild(d);SFX.pop();setTimeout(()=>d.remove(),3200)}
+
+/* ================= TABS ================= */
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
+  const t=b.dataset.tab;SFX.click();
+  ["show","chan","crew","room"].forEach(k=>$("v-"+k).classList.toggle("hide",k!==t));
+  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("off",x!==b));
+  if(t==="crew")renderCrew();if(t==="room")renderRoom(false);
+});
+
+/* ================= BOOT ================= */
+$("themeTag").textContent=IS_BOSS?"FRIDAY: BOSS ROUND UNLOCKED":"PICK YOUR CHANNEL";
+$("themeTag").classList.toggle("boss",IS_BOSS);
+startShow(false);initChan();renderRoom(false);renderCrew();
+if(allDone())powerOff(true);
+
+// Shared features (crowd stats, crews, poll results) need a backend. See README.
+</script>
+</body>
+</html>
